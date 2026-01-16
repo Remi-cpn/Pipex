@@ -6,7 +6,7 @@
 /*   By: rcompain <rcompain@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/20 14:53:44 by rcompain          #+#    #+#             */
-/*   Updated: 2025/12/20 15:04:44 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/01/16 15:48:54 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void	ft_freenull(void *p)
 {
+	if (!p)
+		return ;
 	free(p);
 	p = NULL;
 }
