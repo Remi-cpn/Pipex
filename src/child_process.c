@@ -6,7 +6,7 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/18 10:22:36 by rcompain          #+#    #+#             */
-/*   Updated: 2026/01/20 11:49:20 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/01/20 11:53:28 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static int	test_path(t_data *pipex, char *path, char **paths, char **cmd)
 	if (!pipex->path)
 	{
 		free_array(paths);
-		exit_prog(pipex, 1);
+		exit_prog(pipex, ERROR);
 	}
 	return (SUCCES);
 }
@@ -50,7 +50,7 @@ static int	find_path(t_data *pipex, char **cmd)
 		{
 			paths = ft_split(pipex->envp[i] + 5, ':');
 			if (!paths)
-				exit_prog(pipex, 1);
+				exit_prog(pipex, ERROR);
 			i = 0;
 			while (paths && paths[i] && find == FAILURE)
 			{
@@ -59,7 +59,7 @@ static int	find_path(t_data *pipex, char **cmd)
 			}
 			free_array(paths);
 			if (find == FAILURE)
-				exit_prog(pipex, 5);
+				exit_prog(pipex, ERROR);
 		}
 	}
 	return (find);
@@ -72,17 +72,17 @@ void	child_process_last(t_data *pipex)
 
 	outfile_fd = open(pipex->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (outfile_fd < 0)
-		exit_prog(pipex, 2);
+		exit_prog(pipex, ERROR);
 	find = find_path(pipex, pipex->cmd2);
 	if (find == FAILURE)
-		exit_prog(pipex, 3);
+		exit_prog(pipex, ERROR);
 	dup2(pipex->fds[0], STDIN_FILENO);
 	dup2(outfile_fd, STDOUT_FILENO);
 	close(outfile_fd);
 	close(pipex->fds[0]);
 	close(pipex->fds[1]);
 	execve(pipex->path, pipex->cmd2, pipex->envp);
-	exit_prog(pipex, 4);
+	exit_prog(pipex, ERROR);
 }
 
 void	child_process_first(t_data *pipex)
@@ -92,15 +92,15 @@ void	child_process_first(t_data *pipex)
 
 	infile_fd = open(pipex->infile, O_RDONLY);
 	if (infile_fd < 0)
-		exit_prog(pipex, 2);
+		exit_prog(pipex, ERROR);
 	find = find_path(pipex, pipex->cmd1);
 	if (find == FAILURE)
-		exit_prog(pipex, 3);
+		exit_prog(pipex, ERROR);
 	dup2(infile_fd, STDIN_FILENO);
 	dup2(pipex->fds[1], STDOUT_FILENO);
 	close(infile_fd);
 	close(pipex->fds[0]);
 	close(pipex->fds[1]);
 	execve(pipex->path, pipex->cmd1, pipex->envp);
-	exit_prog(pipex, 4);
+	exit_prog(pipex, ERROR);
 }

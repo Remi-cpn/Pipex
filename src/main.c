@@ -6,7 +6,7 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/16 10:36:24 by rcompain          #+#    #+#             */
-/*   Updated: 2026/01/20 11:42:35 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/01/20 11:53:47 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	main(int ac, char **av, char **envp)
 	pid_t	pid2;
 
 	if (ac != 5)
-		exit_prog(&pipex, 1);
+		exit_prog(&pipex, ERROR);
 	init_pipex(&pipex, av);
 	pipex.envp = envp;
 	pipe(pipex.fds);
