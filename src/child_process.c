@@ -6,14 +6,14 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/18 10:22:36 by rcompain          #+#    #+#             */
-/*   Updated: 2026/01/18 11:18:04 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/01/20 11:49:20 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 #include <fcntl.h>
 
-static int	test_path(t_data *data, char *path, char **paths, char **cmd)
+static int	test_path(t_data *pipex, char *path, char **paths, char **cmd)
 {
 	int		find;
 	char	*tmp;
@@ -26,84 +26,81 @@ static int	test_path(t_data *data, char *path, char **paths, char **cmd)
 		ft_freenull(tmp);
 		return (FAILURE);
 	}
-	data->path = ft_strdup(tmp, 0);
+	pipex->path = ft_strdup(tmp, 0);
 	ft_freenull(tmp);
-	if (!data->path)
+	if (!pipex->path)
 	{
 		free_array(paths);
-		exit_prog("ERR_MALLOC.\n");
+		exit_prog(pipex, 1);
 	}
 	return (SUCCES);
 }
 
-static int	find_path(t_data *data, char **cmd)
+static int	find_path(t_data *pipex, char **cmd)
 {
 	int		i;
 	int		find;
 	char	**paths;
 
-	i = 0;
+	i = -1;
 	find = FAILURE;
-	while (data->envp[i] && find == FAILURE)
+	while (pipex->envp[++i] && find == FAILURE)
 	{
-		if (ft_strncmp(data->envp[i], "PATH=", 5) == 0)
+		if (ft_strncmp(pipex->envp[i], "PATH=", 5) == 0)
 		{
-			paths = ft_split(data->envp[i] + 5, ':');
+			paths = ft_split(pipex->envp[i] + 5, ':');
 			if (!paths)
-				exit_prog("ERR_MALLOC.\n");
+				exit_prog(pipex, 1);
 			i = 0;
 			while (paths && paths[i] && find == FAILURE)
 			{
-				find = test_path(data, paths[i], paths, cmd);
+				find = test_path(pipex, paths[i], paths, cmd);
 				i++;
 			}
 			free_array(paths);
+			if (find == FAILURE)
+				exit_prog(pipex, 5);
 		}
-		i++;
 	}
 	return (find);
 }
 
-void	child_process_cmd2(t_data *data)
+void	child_process_last(t_data *pipex)
 {
 	int	find;
 	int	outfile_fd;
 
-	outfile_fd = open(data->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	outfile_fd = open(pipex->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (outfile_fd < 0)
-		exit_prog("Outfile not found.\n");
-	find = find_path(data, data->cmd2);
+		exit_prog(pipex, 2);
+	find = find_path(pipex, pipex->cmd2);
 	if (find == FAILURE)
-		exit_prog("Command not found.\n");
-	dup2(data->fds[0], STDIN_FILENO);
+		exit_prog(pipex, 3);
+	dup2(pipex->fds[0], STDIN_FILENO);
 	dup2(outfile_fd, STDOUT_FILENO);
 	close(outfile_fd);
-	close(data->fds[0]);
-	close(data->fds[1]);
-	write(2, data->path, ft_strlen(data->path));
-	write(2, "\n", 1);
-	execve(data->path, data->cmd2, data->envp);
-	exit_prog("Execve Faillure cmd2.\n");
+	close(pipex->fds[0]);
+	close(pipex->fds[1]);
+	execve(pipex->path, pipex->cmd2, pipex->envp);
+	exit_prog(pipex, 4);
 }
 
-void	child_process_cmd1(t_data *data)
+void	child_process_first(t_data *pipex)
 {
 	int	find;
 	int	infile_fd;
 
-	infile_fd = open(data->infile, O_RDONLY);
+	infile_fd = open(pipex->infile, O_RDONLY);
 	if (infile_fd < 0)
-		exit_prog("Infile not found.\n");
-	find = find_path(data, data->cmd1);
+		exit_prog(pipex, 2);
+	find = find_path(pipex, pipex->cmd1);
 	if (find == FAILURE)
-		exit_prog("Command not found.\n");
+		exit_prog(pipex, 3);
 	dup2(infile_fd, STDIN_FILENO);
-	dup2(data->fds[1], STDOUT_FILENO);
+	dup2(pipex->fds[1], STDOUT_FILENO);
 	close(infile_fd);
-	close(data->fds[0]);
-	close(data->fds[1]);
-	write(2, data->path, ft_strlen(data->path));
-	write(2, "\n", 1);
-	execve(data->path, data->cmd1, data->envp);
-	exit_prog("Execve Faillure cmd1.\n");
+	close(pipex->fds[0]);
+	close(pipex->fds[1]);
+	execve(pipex->path, pipex->cmd1, pipex->envp);
+	exit_prog(pipex, 4);
 }
