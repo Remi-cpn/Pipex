@@ -6,7 +6,7 @@
 #    By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/14 17:34:44 by rcompain          #+#    #+#              #
-#    Updated: 2025/12/11 18:27:21 by remi-cpn         ###   ########.fr        #
+#    Updated: 2026/01/18 10:54:17 by rcompain         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -62,6 +62,7 @@ SRC_MEM = 	ft_memchr.c \
 			ft_memcpy.c \
 			ft_memmove.c \
 			ft_memset.c \
+			ft_freenull.c \
 
 SRC_LST =	ft_lstnew.c \
 			ft_lstadd_front.c \

@@ -6,7 +6,7 @@
 #    By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/07 09:56:21 by rcompain          #+#    #+#              #
-#    Updated: 2026/01/16 10:36:42 by rcompain         ###   ########.fr        #
+#    Updated: 2026/01/18 10:50:44 by rcompain         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,9 @@ LIBFT_A		= $(LIBFT_DIR)/libft.a
 #                                   SOURCES                                    #
 # **************************************************************************** #
 
-SRC			= $(SRC_DIR)/main.c
+SRC			= $(SRC_DIR)/main.c \
+			  $(SRC_DIR)/child_process.c \
+			  $(SRC_DIR)/exit.c
 
 OBJ			= ${SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o}
 
