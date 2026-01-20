@@ -6,7 +6,7 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/16 11:00:59 by rcompain          #+#    #+#             */
-/*   Updated: 2026/01/20 11:34:09 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/01/20 12:30:49 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,15 @@ void	free_array(char **s)
 
 void	exit_prog(t_data *pipex, int code_error)
 {
+	int	i;
+
 	if (code_error != SUCCES)
 		perror("Error ");
-	if (pipex->cmd1)
-		free_array(pipex->cmd1);
-	if (pipex->cmd2)
-		free_array(pipex->cmd2);
+	i = 0;
+	while (pipex->cmd[i])
+	{
+		free_array(pipex->cmd[i]);
+		i++;
+	}
 	exit(code_error);
 }

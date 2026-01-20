@@ -6,7 +6,7 @@
 #    By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/07 09:56:21 by rcompain          #+#    #+#              #
-#    Updated: 2026/01/18 10:50:44 by rcompain         ###   ########.fr        #
+#    Updated: 2026/01/20 14:09:34 by rcompain         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@
 
 NAME		= pipex
 CC			= cc
-CFLAGS		= -Wall -Wextra -Werror
+CFLAGS		= -Wall -Wextra -Werror -g
 RM			= rm -f
 AR			= ar rcs
 
